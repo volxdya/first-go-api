@@ -18,3 +18,11 @@ third method
 ```
 go build -o ../bin/main
 ```
+
+create .env file at project's root
+
+variables:
+
+```
+DB_ADDRESS="postgres://username:password@host:port/db_name"
+```
