@@ -1,43 +1,59 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"myapi/pkg/models"
-	"os"
-
-	"github.com/jackc/pgx/v5"
+	"myapi/pkg/repository"
 )
 
 func main() {
 	connStr := "postgres://postgres:qwerty@localhost:5432/damn_test"
 
-	//api := api.New("localhost:3001", http.NewServeMux())
-	//api.FillEndpoints()
-	//log.Fatal(api.ListenAndServe())
-	conn, err := pgx.Connect(context.Background(), connStr)
+	// api := api.New("localhost:3001", http.NewServeMux())
+	// api.FillEndpoints()
+	// log.Fatal(api.ListenAndServe())
+
+	db, err := repository.New(connStr)
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
+		log.Fatal(err.Error())
 	}
 
-	defer conn.Close(context.Background())
+	users, err := db.GetUsers()
 
-	var u models.User
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
-	err = conn.QueryRow(context.Background(), "SELECT id, first_name, last_name, login, age, role_id FROM users WHERE id = 12;").Scan(
-		&u.ID,
-		&u.FirstName,
-		&u.LastName,
-		&u.Login,
-		&u.Age,
-		&u.RoleID,
+	for _, item := range users {
+		fmt.Printf(
+			"id: %d, login: %s, firstName: %s, lastName: %s, age: %d, roleID: %d \n",
+			item.ID,
+			item.Login,
+			item.FirstName,
+			item.LastName,
+			item.Age,
+			item.RoleID,
+		)
+	}
+
+	user, err := db.GetUserByID(12)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	fmt.Printf(
+		"id: %d, login: %s, firstName: %s, lastName: %s, age: %d, roleID: %d \n",
+		user.ID,
+		user.Login,
+		user.FirstName,
+		user.LastName,
+		user.Age,
+		user.RoleID,
 	)
 
-	fmt.Println(u)
-
+	err = db.NewUser(models.User{FirstName: "Артручик", Login: "GLAVNIY", LastName: "LOL", Age: 16, RoleID: 1})
 	if err != nil {
 		log.Fatal(err.Error())
 	}
