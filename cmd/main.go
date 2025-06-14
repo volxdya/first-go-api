@@ -3,11 +3,10 @@ package main
 import (
 	"log"
 	"myapi/pkg/api"
+	"myapi/pkg/repository"
 	"myapi/pkg/tools"
-	"net/http"
 
-	"strings"
-
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
@@ -19,10 +18,17 @@ func loadEnv() {
 
 func main() {
 	loadEnv()
+
 	config := tools.New()
-	serverUrl := strings.Join([]string{config.Server.Host, ":", config.Server.Port}, "")
-	api := api.New(serverUrl, http.NewServeMux())
+	psql, err := repository.New(config.Postgres.ConnStr)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	api := api.New("localhost:3004", mux.NewRouter(), psql)
 	api.FillEndpoints()
-	log.Fatal(api.ListenAndServe(serverUrl))
+
+	log.Fatal(api.ListenAndServe())
 	// api.TestDB()
 }

@@ -1,15 +1,15 @@
 package models
 
 type User struct {
-	ID        int
-	FirstName string
-	LastName  string
-	Login     string
-	RoleID    int
-	Age       int
+	ID        int    `json: "id"`
+	FirstName string `json: "first_name"`
+	LastName  string `json: "last_name"`
+	Login     string `json: "login"`
+	RoleID    int    `json: "role_id"`
+	Age       int    `json: "age"`
 }
 
 type Role struct {
-	User  string
-	Admin string
+	ID       int    `json: "id"`
+	RoleName string `json: "role_name"`
 }

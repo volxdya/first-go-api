@@ -16,7 +16,7 @@ go run main.go
 third method
 
 ```
-go build -o ../bin/main
+go build -o ../bin/main.exe
 ```
 
 create .env file at project's root

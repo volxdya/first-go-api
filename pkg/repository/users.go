@@ -58,7 +58,16 @@ func (repo *PGRepo) NewUser(item models.User) error {
 	_, err := repo.pool.Exec(
 		context.Background(),
 		"INSERT INTO users (first_name, last_name, age, login, role_id) VALUES ($1, $2, $3, $4, $5)",
-		item.FirstName, item.LastName, item.Age, item.Login, item.RoleID,
+		item.FirstName, item.LastName, item.Age, item.Login, 1,
+	)
+
+	return err
+}
+
+func (repo *PGRepo) DeleteUser(id int) error {
+	_, err := repo.pool.Exec(
+		context.Background(),
+		"DELETE FROM USERS WHERE id = $1", id,
 	)
 
 	return err
