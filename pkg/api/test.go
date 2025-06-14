@@ -5,13 +5,13 @@ import (
 	"log"
 	"myapi/pkg/models"
 	"myapi/pkg/repository"
-	"os"
+	"myapi/pkg/tools"
 )
 
 func TestDB() {
-	connStr := os.Getenv("DB_ADDRESS")
+	config := tools.New()
 
-	db, err := repository.New(connStr)
+	db, err := repository.New(config.Postgres.ConnStr)
 
 	if err != nil {
 		log.Fatal(err.Error())
