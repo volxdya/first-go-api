@@ -30,5 +30,4 @@ func main() {
 	api.FillEndpoints()
 
 	log.Fatal(api.ListenAndServe())
-	// api.TestDB()
 }
