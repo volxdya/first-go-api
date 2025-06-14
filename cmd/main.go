@@ -3,6 +3,10 @@ package main
 import (
 	"log"
 	"myapi/pkg/api"
+	"myapi/pkg/tools"
+	"net/http"
+
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -14,10 +18,11 @@ func loadEnv() {
 }
 
 func main() {
-	// api := api.New("localhost:3001", http.NewServeMux())
-	// api.FillEndpoints()
-	// log.Fatal(api.ListenAndServe())
 	loadEnv()
-
-	api.TestDB()
+	config := tools.New()
+	serverUrl := strings.Join([]string{config.Server.Host, ":", config.Server.Port}, "")
+	api := api.New(serverUrl, http.NewServeMux())
+	api.FillEndpoints()
+	log.Fatal(api.ListenAndServe(serverUrl))
+	// api.TestDB()
 }

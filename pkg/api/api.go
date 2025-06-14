@@ -1,6 +1,9 @@
 package api
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 type api struct {
 	addr string
@@ -16,6 +19,7 @@ func (api *api) FillEndpoints() {
 	api.r.HandleFunc("/api/goodbye", goodbye)
 }
 
-func (api *api) ListenAndServe() error {
+func (api *api) ListenAndServe(serverUrl string) error {
+	log.Println("server started on", serverUrl)
 	return http.ListenAndServe(api.addr, api.r)
 }
