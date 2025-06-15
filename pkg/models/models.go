@@ -7,6 +7,7 @@ type User struct {
 	Login     string `json: "login"`
 	RoleID    int    `json: "role_id"`
 	Age       int    `json: "age"`
+	RoleName  string `json: role_name`
 }
 
 type Role struct {

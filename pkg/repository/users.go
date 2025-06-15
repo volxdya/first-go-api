@@ -6,7 +6,12 @@ import (
 )
 
 func (repo *PGRepo) GetUsers() ([]models.User, error) {
-	rows, err := repo.pool.Query(context.Background(), "SELECT id, first_name, last_name, age, login, role_id FROM users;")
+	rows, err := repo.pool.Query(
+		context.Background(),
+		`SELECT users.id, first_name, last_name, age, login, role_id, role_name FROM users
+		 INNER JOIN roles 
+		 ON users.role_id = roles.id;
+		`)
 	if err != nil {
 		return nil, err
 	}
@@ -23,6 +28,7 @@ func (repo *PGRepo) GetUsers() ([]models.User, error) {
 			&item.Age,
 			&item.Login,
 			&item.RoleID,
+			&item.RoleName,
 		)
 
 		if err != nil {
@@ -38,13 +44,19 @@ func (repo *PGRepo) GetUsers() ([]models.User, error) {
 func (repo *PGRepo) GetUserByID(id int) (models.User, error) {
 	var user models.User
 
-	err := repo.pool.QueryRow(context.Background(), "SELECT id, first_name, last_name, age, login, role_id FROM users where id = $1;", id).Scan(
+	err := repo.pool.QueryRow(context.Background(),
+		`SELECT users.id, first_name, last_name, age, login, role_id, role_name FROM users
+		 INNER JOIN roles 
+		 ON users.role_id = roles.id
+		 WHERE users.id = $1;
+		`, id).Scan(
 		&user.ID,
 		&user.FirstName,
 		&user.LastName,
 		&user.Age,
 		&user.Login,
 		&user.RoleID,
+		&user.RoleName,
 	)
 
 	if err != nil {
